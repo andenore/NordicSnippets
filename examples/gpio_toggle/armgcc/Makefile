@@ -2,7 +2,7 @@ DEVICE = NRF52
 DEVICE_VARIANT =xxaa
 
 # We have to use SDK, not MDK because core_cm4.h is not provided in MDK
-xDK_TOP =../../../../nRF52_SDK_0.9.2_dbc28c9
+xDK_TOP ?=../../../../nRF52_SDK_0.9.2_dbc28c9
 
 SOURCES = ../main.c
 
