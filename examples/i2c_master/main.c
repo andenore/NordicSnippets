@@ -1,56 +1,61 @@
 #include <nrf.h>
 
-#define PIN_MCK    (13)
-#define PIN_SCK    (14)
-#define PIN_LRCK   (15)
-#define PIN_SDOUT  (16)
+#define DEVICE_ADDRESS (0x34)
+#define PIN_SCL        (27)
+#define PIN_SDA        (26)
+
+void i2c_write(uint8_t addr, uint8_t data)
+{
+  uint8_t tx_buf[2];
+  NRF_TWIM0->SHORTS = TWIM_SHORTS_LASTTX_STOP_Msk;
+  
+  tx_buf[0] = addr;
+  tx_buf[1] = data;
+  NRF_TWIM0->TXD.MAXCNT = sizeof(tx_buf);
+  NRF_TWIM0->TXD.PTR = (uint32_t)&tx_buf[0];
+  
+  NRF_TWIM0->EVENTS_STOPPED = 0;
+  NRF_TWIM0->TASKS_STARTTX = 1;
+  while (NRF_TWIM0->EVENTS_STOPPED == 0);
+}
+
+uint8_t i2c_read(uint8_t addr)
+{
+  uint8_t tx_buf[1];
+  uint8_t rx_buf[1];
+  NRF_TWIM0->SHORTS = TWIM_SHORTS_LASTTX_STARTRX_Msk | TWIM_SHORTS_LASTRX_STOP_Msk;
+  
+  tx_buf[0] = addr;
+  NRF_TWIM0->TXD.MAXCNT = sizeof(tx_buf);
+  NRF_TWIM0->TXD.PTR = (uint32_t)&tx_buf[0];
+  
+  NRF_TWIM0->RXD.MAXCNT = 1;
+  NRF_TWIM0->RXD.PTR = (uint32_t)&rx_buf[0];
+  
+  NRF_TWIM0->EVENTS_STOPPED = 0;
+  NRF_TWIM0->TASKS_STARTTX = 1;
+  while (NRF_TWIM0->EVENTS_STOPPED == 0);
+  
+  return rx_buf[0];
+}
 
 int main(void)
 {
-  // Sine table (stereo, so every value is duplicated)
-  int16_t sine_table[] = { 0, 0, 23170, 23170, 32767, 32767, 23170, 23170, 0, 0, -23170, -23170, -32768, -32768, -23170, -23170};
+  volatile uint8_t data;
   
-  // Enable transmission
-  NRF_I2S->CONFIG.TXEN = (I2S_CONFIG_TXEN_TXEN_ENABLE << I2S_CONFIG_TXEN_TXEN_Pos);
+  NRF_TWIM0->PSEL.SCL = PIN_SCL;
+  NRF_TWIM0->PSEL.SDA = PIN_SDA;
   
-  // Enable MCK generator
-  NRF_I2S->CONFIG.MCKEN = (I2S_CONFIG_MCKEN_MCKEN_ENABLE << I2S_CONFIG_MCKEN_MCKEN_Pos);
+  NRF_TWIM0->ADDRESS = DEVICE_ADDRESS;
+  NRF_TWIM0->FREQUENCY = TWIM_FREQUENCY_FREQUENCY_K400 << TWIM_FREQUENCY_FREQUENCY_Pos;
+  NRF_TWIM0->SHORTS = 0;
   
-  // MCKFREQ = 4 MHz
-  NRF_I2S->CONFIG.MCKFREQ = I2S_CONFIG_MCKFREQ_MCKFREQ_32MDIV11  << I2S_CONFIG_MCKFREQ_MCKFREQ_Pos;
+  NRF_TWIM0->ENABLE = TWIM_ENABLE_ENABLE_Enabled << TWIM_ENABLE_ENABLE_Pos;
   
-  // Ratio = 64 
-  NRF_I2S->CONFIG.RATIO = I2S_CONFIG_RATIO_RATIO_64X << I2S_CONFIG_RATIO_RATIO_Pos;
-    
-  // Master mode, 16Bit, left aligned
-  NRF_I2S->CONFIG.MODE = I2S_CONFIG_MODE_MODE_MASTER << I2S_CONFIG_MODE_MODE_Pos;
-  NRF_I2S->CONFIG.SWIDTH = I2S_CONFIG_SWIDTH_SWIDTH_16BIT << I2S_CONFIG_SWIDTH_SWIDTH_Pos;
-  NRF_I2S->CONFIG.ALIGN = I2S_CONFIG_ALIGN_ALIGN_LEFT << I2S_CONFIG_ALIGN_ALIGN_Pos;
+  i2c_write(0x0, 0xFF);
   
-  // Format = I2S
-  NRF_I2S->CONFIG.FORMAT = I2S_CONFIG_FORMAT_FORMAT_I2S << I2S_CONFIG_FORMAT_FORMAT_Pos;
+  data = i2c_read(0x0);
   
-  // Use stereo 
-  NRF_I2S->CONFIG.CHANNELS = I2S_CONFIG_CHANNELS_CHANNELS_STEREO << I2S_CONFIG_CHANNELS_CHANNELS_Pos;
-  
-  // Configure pins
-  NRF_I2S->PSEL.MCK = (PIN_MCK << I2S_PSEL_MCK_PIN_Pos);
-  NRF_I2S->PSEL.SCK = (PIN_SCK << I2S_PSEL_SCK_PIN_Pos); 
-  NRF_I2S->PSEL.LRCK = (PIN_LRCK << I2S_PSEL_LRCK_PIN_Pos); 
-  NRF_I2S->PSEL.SDOUT = (PIN_SDOUT << I2S_PSEL_SDOUT_PIN_Pos);
-  
-  NRF_I2S->ENABLE = 1;
-  
-  // Configure data pointer
-  NRF_I2S->TXD.PTR = (uint32_t)&sine_table[0];
-  NRF_I2S->RXTXD.MAXCNT = sizeof(sine_table) / sizeof(uint32_t);
-  
-  // Start transmitting I2S data
-  NRF_I2S->TASKS_START = 1;
-  
-  
-  // Since we are not updating the TXD pointer, the sine wave will play over and over again.
-  // The TXD pointer can be updated after the EVENTS_TXPTRUPD arrives.
   while (1)
   {
     __WFE();
