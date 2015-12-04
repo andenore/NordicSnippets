@@ -30,3 +30,14 @@ Linux:
 Run 'nrfjprog' from your command line. The help menu should print and this indicates its path has been properly set.
 
 Now you can use nrfjprog! After building any of the examples just run 'make flash' from your command line to completly erase the chip, program & verify the hex file, and reset and run the application!
+
+## How to contribute
+If you are missing some examples you think would be nice, or think something could be improved, feel free to send a pull request.
+There are some rules that should be followed:
+* All examples should consist of only one file (main.c)
+* There should be a minimal amount of dependencies 
+* The code needs to be compilable with ARM GCC (needed by integration server)
+
+Examples should be placed under the examples directory, and include the main.c file and a armgcc directory with the Makefile for the project. A readme should be added to explain what peripherals are used and the intention of the code.
+ 
+
