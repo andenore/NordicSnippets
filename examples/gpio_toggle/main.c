@@ -1,6 +1,6 @@
 #include <nrf.h>
 
-#define PIN_GPIO  (11UL)
+#define PIN_GPIO  (17UL)
 
 int main(void)
 {
@@ -15,15 +15,14 @@ int main(void)
   // Toggle GPIO ON/OFF.
   while (1)
   {
-    uint32_t tmo;
+    uint32_t volatile tmo;
     
-    tmo = 300;
+    tmo = 10000000;
     while (tmo--);
     NRF_GPIO->OUTSET = (1UL << PIN_GPIO);    
     
-    tmo = 300;
+    tmo = 10000000;
     while (tmo--);
-    NRF_GPIO->OUTCLR = (1UL << PIN_GPIO);    
+    NRF_GPIO->OUTCLR = (1UL << PIN_GPIO);  
   }
 }
-
