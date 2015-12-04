@@ -1,8 +1,8 @@
 DEVICE = NRF52
-DEVICE_VARIANT =xxaa
+DEVICE_VARIANT = xxaa
 
-# We have to use SDK, not MDK because core_cm4.h is not provided in MDK
-xDK_TOP ?=../../../../nRF52_SDK_0.9.2_dbc28c9
+CMSIS ?= ../../../common/arm
+MDK   ?= ../../../common/nRF5x_MDK_8_1_0_GCC
 
 SOURCES = ../main.c
 
@@ -20,12 +20,12 @@ PROG_NAME ?= example
 # CPU related flags
 ifeq ($(DEVICE),NRF51)
 CFLAGS += -mthumb -mcpu=cortex-m0 -march=armv6-m
-LINKER_SCRIPT = $(xDK_TOP)/components/toolchain/gcc/nrf51_$(DEVICE_VARIANT).ld
+LINKER_SCRIPT = $(MDK)/nrf51_$(DEVICE_VARIANT).ld
 endif
 
 ifeq ($(DEVICE),NRF52)
 CFLAGS +=  -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfpu=fpv4-sp-d16 -mfloat-abi=hard
-LINKER_SCRIPT = $(xDK_TOP)/components/toolchain/gcc/nrf52_$(DEVICE_VARIANT).ld
+LINKER_SCRIPT = $(MDK)/nrf52_$(DEVICE_VARIANT).ld
 endif
 
 ifeq ($(DEBUG),yes)
@@ -42,15 +42,14 @@ CFLAGS += -std=gnu99   -Wall -D$(DEVICE)
 
 # Linker flags (passed to gcc)
 CFLAGS += -T $(LINKER_SCRIPT)
-CFLAGS += -L $(xDK_TOP)/components/toolchain/gcc
+CFLAGS += -L $(MDK)
 
 # Include search path
-CFLAGS += -I$(xDK_TOP)/components/device
-CFLAGS += -I$(xDK_TOP)/components/toolchain
-CFLAGS += -I$(xDK_TOP)/components/toolchain/gcc
+CFLAGS += -I$(CMSIS)
+CFLAGS += -I$(MDK)
 
-SOURCES += $(xDK_TOP)/components/toolchain/system_$(DEVICE_LC).c
-SOURCES += $(xDK_TOP)/components/toolchain/gcc/gcc_startup_$(DEVICE_LC).s
+SOURCES += $(MDK)/system_$(DEVICE_LC).c
+SOURCES += $(MDK)/gcc_startup_$(DEVICE_LC).S
 
 all:
 	@echo "Program : $(PROG_NAME)"
@@ -76,6 +75,7 @@ clean:
 	@rm -f gcc_startup_$(DEVICE_LC).o
 
 check_setup:
-	@echo "xDK_TOP   = " $(xDK_TOP)
+	@echo "MDK       = " $(MDK)
+	@echo "CMSIS     = " $(CMSIS)
 	@echo "SOURCES   = " $(SOURCES)
 	@echo "PROG_NAME = " $(PROG_NAME)
