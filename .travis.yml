@@ -9,7 +9,7 @@ before_script:
   - ./common/ci/ci-install-sdk.sh
 
 script:
-  - find examples -name "armgcc" | xargs -n1 make -C
+  - find examples -name "armgcc" | xargs -Ixxx -n1 make clean all -C xxx xDK_TOP=/tmp/nrf52-sdk-for-travis-ci
   
   
   
