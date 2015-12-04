@@ -22,11 +22,11 @@ nRF51: http://www.nordicsemi.com/eng/Products/Bluetooth-Smart-Bluetooth-low-ener
 The nrfjprog utility can be used for programming target devices and reading/writing device memory among other things. It is available in the nRF5x-Tools-* download.
 
 Windows:
-	Download nRF5x-Tools_Win32 and add the path to nrfjprog.exe to your system PATH.
+	Download nRF5x-Tools_Win32 and add the full path of nrfjprog.exe to your system PATH.
 
 Linux:
-	Download Tools_Linux and run 'sudo ln -s <path to nrfjprog.exe> /usr/local/bin/nrfjprog' in your command line.
+	Download nRF5x-Tools_Linux and run 'sudo ln -s <path to nrfjprog.exe> /usr/local/bin/nrfjprog' from your command line.
 
 Run 'nrfjprog' from your command line. The help menu should print and this indicates its path has been properly set.
 
-Now you can use nrfjprog! After building any of the examples just run 'make flash' in your command line to completly erase the chip, program & verify the hex file, and reset and run the application!
+Now you can use nrfjprog! After building any of the examples just run 'make flash' from your command line to completly erase the chip, program & verify the hex file, and reset and run the application!
