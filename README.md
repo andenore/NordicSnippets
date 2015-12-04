@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/rbarzic/NordicSnippets.svg?branch=master)](https://travis-ci.org/rbarzic/NordicSnippets)
 # NordicSnippets
 
 NordicSnippets is a collection of bare-metal example code that runs on the nRF51 and nRF52 series of Nordic Semiconductor SoCs.
