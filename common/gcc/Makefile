@@ -61,15 +61,18 @@ all:
 	$(OBJCOPY) -Oihex $(PROG_NAME).elf   $(PROG_NAME).hex
 	$(OBJCOPY) -Obinary $(PROG_NAME).elf $(PROG_NAME).bin
 
+flash:
+	@echo Flashing: $(PROG_NAME).hex
+	nrfjprog -f NRF52 --program $(PROG_NAME).hex --chiperase --verify
+	nrfjprog -f NRF52 --reset
+
 debug:
 	make -C . DEBUG=yes
-
 
 clean:
 	rm -f  $(PROG_NAME).elf  $(PROG_NAME).o $(PROG_NAME).hex $(PROG_NAME).bin
 	rm -f system_$(DEVICE_LC).o
 	rm -f gcc_startup_$(DEVICE_LC).o
-
 
 check_setup:
 	@echo "xDK_TOP   = " $(xDK_TOP)
