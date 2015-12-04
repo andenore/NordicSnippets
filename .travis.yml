@@ -6,10 +6,11 @@ before_install:
   - sudo apt-get install -y build-essential gcc-arm-none-eabi
 
 before_script:
-  - ./ci-install-sdk.sh
+  - ./common/ci/ci-install-sdk.sh
 
 script:
-  - make -C examples/gpio_toggle/armgcc clean all xDK_TOP=/tmp/nrf52-sdk-for-travis-ci
+  - find examples -name "armgcc" | xargs -n1 make -C
+  
   
   
 
