@@ -13,13 +13,9 @@ OBJDUMP  		:= "$(GNU_PREFIX)-objdump"
 OBJCOPY  		:= "$(GNU_PREFIX)-objcopy"
 
 
-
-CC = arm-none-eabi-gcc
-
+QUIET=@
 
 PROG_NAME ?= example
-
-
 
 # CPU related flags
 ifeq ($(DEVICE),NRF51)
@@ -57,9 +53,14 @@ SOURCES += $(xDK_TOP)/components/toolchain/system_$(DEVICE_LC).c
 SOURCES += $(xDK_TOP)/components/toolchain/gcc/gcc_startup_$(DEVICE_LC).s
 
 all:
-	$(CC) $(CFLAGS) $(SOURCES) -o $(PROG_NAME).elf
-	$(OBJCOPY) -Oihex $(PROG_NAME).elf   $(PROG_NAME).hex
-	$(OBJCOPY) -Obinary $(PROG_NAME).elf $(PROG_NAME).bin
+	@echo "Program : $(PROG_NAME)"
+	@echo "Compiling  $(SOURCES)"
+	$(QUIET)$(CC) $(CFLAGS) $(SOURCES) -o $(PROG_NAME).elf
+	@echo "Creating  $(PROG_NAME).hex"
+	$(QUIET)$(OBJCOPY) -Oihex $(PROG_NAME).elf   $(PROG_NAME).hex
+	@echo "Creating  $(PROG_NAME).bin"
+	$(QUIET)$(OBJCOPY) -Obinary $(PROG_NAME).elf $(PROG_NAME).bin
+	@echo "Done"
 
 flash:
 	@echo Flashing: $(PROG_NAME).hex
@@ -70,9 +71,9 @@ debug:
 	make -C . DEBUG=yes
 
 clean:
-	rm -f  $(PROG_NAME).elf  $(PROG_NAME).o $(PROG_NAME).hex $(PROG_NAME).bin
-	rm -f system_$(DEVICE_LC).o
-	rm -f gcc_startup_$(DEVICE_LC).o
+	@rm -f  $(PROG_NAME).elf  $(PROG_NAME).o $(PROG_NAME).hex $(PROG_NAME).bin
+	@rm -f system_$(DEVICE_LC).o
+	@rm -f gcc_startup_$(DEVICE_LC).o
 
 check_setup:
 	@echo "xDK_TOP   = " $(xDK_TOP)
