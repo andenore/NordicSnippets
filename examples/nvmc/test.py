@@ -1,9 +1,10 @@
 from pynrfjprog import API, Hex
 import unittest
 import os
+import sys
 
-DIR = os.path.dirname(__file__)
-FILENAME = os.path.join(DIR, '/armgcc/nvmc.hex')
+DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+FILENAME = os.path.join(DIR, 'armgcc/nvmc.hex')
 
 class NVMCTests(unittest.TestCase):
 
@@ -39,10 +40,10 @@ class NVMCTests(unittest.TestCase):
         print(FILENAME)
         self.api.write_u32(0x20000, 0xDEADBEEF, 1)
         self._program_hex_file(FILENAME)
-        self.api.reset()
+        self.api.sys_reset()
         self.api.go()
 
-        expectedData = 0xDEADBEEF
+        expectedData = 0xFFFFFFFF
         readData = self.api.read_u32(0x20000)
         self.assertEqual(expectedData, readData)
 
@@ -63,7 +64,7 @@ class NVMCTests(unittest.TestCase):
         """
         data = Hex.Hex(hex_file_path)
         for segment in data:
-            api.write(segment.address, segment.data, True)
+            self.api.write(segment.address, segment.data, True)
 
 
 unittest.main(verbosity = 2) # Call the unit tests with desired verbosity.
