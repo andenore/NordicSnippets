@@ -1,7 +1,8 @@
 from pynrfjprog import API, Hex
 import unittest
-import os
 import sys
+import os
+
 
 DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
 FILENAME = os.path.join(DIR, 'armgcc/nvmc.hex')
@@ -30,21 +31,35 @@ class NVMCTests(unittest.TestCase):
         self.api.close()
         
     def setUp(self):
-        self.api.erase_all()
+        pass
         
     def tearDown(self):
-        pass
+        self.api.erase_all()
 
-    def test_erase_all(self):
-        print(DIR)
-        print(FILENAME)
-        self.api.write_u32(0x20000, 0xDEADBEEF, 1)
-        self._program_hex_file(FILENAME)
-        self.api.sys_reset()
-        self.api.go()
-
+    def test_erase_code_flash(self):
+        test_address = 0x20000
+        test_data    = 0xDEADBEEF
+        
+        self.api.write_u32(test_address, test_data, 1)
+        
+        self._program_hex_file_and_run(FILENAME)
+        
         expectedData = 0xFFFFFFFF
-        readData = self.api.read_u32(0x20000)
+        readData     = self.api.read_u32(test_address)
+        
+        self.assertEqual(expectedData, readData)
+
+    def test_erase_uicr_flash(self):
+        test_address = 0x10001080
+        test_data    = 0xDEADBEEF
+        
+        self.api.write_u32(test_address, test_data, 1)
+        
+        self._program_hex_file_and_run(FILENAME)
+        
+        expectedData = 0xFFFFFFFF
+        readData     = self.api.read_u32(test_address)
+        
         self.assertEqual(expectedData, readData)
 
     
@@ -58,13 +73,16 @@ class NVMCTests(unittest.TestCase):
         self.api.connect_to_device()
 
     @classmethod
-    def _program_hex_file(self, hex_file_path):
+    def _program_hex_file_and_run(self, hex_file_path):
         """
-        Programs hex_file to the target device.
+        Programs hex_file to the target device, reset, and run the application.
         """
         data = Hex.Hex(hex_file_path)
         for segment in data:
             self.api.write(segment.address, segment.data, True)
+
+        self.api.sys_reset()
+        self.api.go()
 
 
 unittest.main(verbosity = 2) # Call the unit tests with desired verbosity.
