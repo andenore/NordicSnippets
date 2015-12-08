@@ -4,17 +4,15 @@
 int main(void)
 {
 	static const uint32_t code_flash_address      = 0x20000ul;
+	static const uint32_t code_flash_page         = (uint32_t) (code_flash_address / 0x1000ul);
 	static const uint32_t uicr_customer_address_0 = 0x10001080ul;
 	static const uint32_t test_data               = 0x0ul;
 
-	// Erase the entire Code Flash area.
-	while (NRF_NVMC->READY != NVMC_READY_READY_Ready);
-	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Een;
-	NRF_NVMC->ERASEALL = NVMC_ERASEALL_ERASEALL_Erase;
-
 	// Erase the UICR (page in NVM).
 	while (NRF_NVMC->READY != NVMC_READY_READY_Ready);
+	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Een;
 	NRF_NVMC->ERASEUICR = NVMC_ERASEUICR_ERASEUICR_Erase;
+	while (NRF_NVMC->READY != NVMC_READY_READY_Ready);
 	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
 
 	// Write a value to an address in Code Flash.
@@ -24,6 +22,11 @@ int main(void)
 	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
 
 	// Erase that value by erasing the page it resides in.
+	while (NRF_NVMC->READY != NVMC_READY_READY_Ready);
+	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Een;
+	NRF_NVMC->ERASEPAGE = code_flash_page;
+	while (NRF_NVMC->READY != NVMC_READY_READY_Ready);
+	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
 
 	// Write a value to an address in UICR.
 	while (NRF_NVMC->READY != NVMC_READY_READY_Ready << NVMC_READY_READY_Pos);
