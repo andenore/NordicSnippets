@@ -62,6 +62,16 @@ class NVMCTests(unittest.TestCase):
         
         self.assertEqual(expectedData, readData)
 
+    def test_nvmc_hex_writes_uicr_correctly(self):
+        test_address = 0x10001080
+        test_data    = 0xB15B00B5
+
+        self._program_hex_file_and_run(FILENAME)
+
+        readData     = self.api.read_u32(test_address)
+
+        self.assertEqual(test_data, readData)
+
     
     @classmethod    
     def _connect_to_target(self):
