@@ -38,7 +38,7 @@ Now you can use nrfjprog! After building any of the examples just run 'make flas
 ## Using pynrfjprog
 pynrfjprog is a python tool Nordic provides that makes setting up an automatic test suite for Nordic series devices very easy! It can be used with Python 2.7 and above and Python 3. To install pynrfjprog make sure you have 'pip' installed on your computer and run 'pip install pynrfjprog' from your command line.
 
-Now you can automatically test all examples that conatin the file 'test.py' in the same director as the example's 'main.c' file. After compiling the example, open a command line in the same directory as the example's 'test.py' and run 'python test.py' from your command line.
+Now you can automatically test all examples that contain the file 'test.py' in the same director as the example's 'main.c' file. After compiling the example, open a command line in the same directory as the example's 'test.py' and run 'python test.py' from your command line.
 
 Note: The framework of 'test.py' can be easily used as a template to test other examples and custom applications.
 
