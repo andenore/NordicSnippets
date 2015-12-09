@@ -11,6 +11,15 @@ class NVMCTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
+        """
+        Set up the test suite and initialize connection with target device.
+        Define class variables here that encapsulate expected behavior of program under test.
+        """
+        self.expectedTestData     = 0x0 # These are the same variables defined in main.c of our nvmc example.
+        self.uicrCustomerAddress0 = 0x10001080
+        self.codeFlashAddress     = 0x1FFF8
+        self.codeFlashPageAddress = 0x20000
+
         self.device_family = API.DeviceFamily.NRF51  # Start out with nRF51 as expected target device, will be checked and changed if target is an nRF52 series device.
         self.api = API.API(self.device_family)
         
@@ -36,41 +45,41 @@ class NVMCTests(unittest.TestCase):
     def tearDown(self):
         self.api.erase_all()
 
-    def test_erase_code_flash(self):
-        test_address = 0x20000
-        test_data    = 0xDEADBEEF
+    def test_erase_uicr(self):
+        uicrCustomerAddress1 = self.uicrCustomerAddress0 + 4
+        testData             = 0xDEADBEEF
+        expectedData         = 0xFFFFFFFF
         
-        self.api.write_u32(test_address, test_data, 1)
+        self.api.write_u32(uicrCustomerAddress1, testData, 1)
         
         self._program_hex_file_and_run(FILENAME)
         
-        expectedData = 0xFFFFFFFF
-        readData     = self.api.read_u32(test_address)
+        readData = self.api.read_u32(uicrCustomerAddress1)
         
         self.assertEqual(expectedData, readData)
 
-    def test_erase_uicr_flash(self):
-        test_address = 0x10001080
-        test_data    = 0xDEADBEEF
-        
-        self.api.write_u32(test_address, test_data, 1)
-        
+    def test_write_code_flash(self):   
+        expectedData = [0x00] * 8   
         self._program_hex_file_and_run(FILENAME)
         
-        expectedData = 0xFFFFFFFF
-        readData     = self.api.read_u32(test_address)
-        
+        readData = self.api.read(self.codeFlashAddress, 8) # Read 8 bytes (two registers) starting at codeFlashAddress.
         self.assertEqual(expectedData, readData)
 
-    def test_nvmc_hex_writes_uicr_correctly(self):
-        test_address = 0x10001080
-        test_data    = 0xB15B00B5
+    def test_code_flash_page_erased(self):
+        expectedData = [0xFF] * 8
+
+        self._program_hex_file_and_run(FILENAME)
+        
+        readData = self.api.read(self.codeFlashPageAddress, 8) # Read 8 bytes (two registers) starting at codePageAddress.
+        self.assertEqual(expectedData, readData)
+
+    def test_uicr_written(self):
+        expectedData = 0x0
 
         self._program_hex_file_and_run(FILENAME)
 
-        readData     = self.api.read_u32(test_address)
-
-        self.assertEqual(test_data, readData)
+        readData = self.api.read_u32(self.uicrCustomerAddress0)
+        self.assertEqual(expectedData, readData)
 
     
     @classmethod    

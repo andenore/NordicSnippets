@@ -18,7 +18,6 @@ int main(void)
 	
 	static uint32_t code_flash_address            = 0x1FFF8ul;
 
-
 	// Erase the UICR.
 	nvmc_wait_until_ready();
 	NRF_NVMC->CONFIG        = NVMC_CONFIG_WEN_Een;
@@ -42,17 +41,19 @@ int main(void)
 
 	// Now erase page 32 in Code Flash (the page starting at address 0x20000 and ending at address 0x21000).
 	nvmc_wait_until_ready();
-	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Een;
+	NRF_NVMC->CONFIG    = NVMC_CONFIG_WEN_Een;
 	NRF_NVMC->ERASEPAGE = code_flash_page_address;
 	nvmc_wait_until_ready();
-	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
+	NRF_NVMC->CONFIG    = NVMC_CONFIG_WEN_Ren;
 
 	// Write a value to an address in UICR.
 	nvmc_wait_until_ready();
-	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen;
+	NRF_NVMC->CONFIG  = NVMC_CONFIG_WEN_Wen;
+
 	*((uint32_t *) uicr_customer_address_0) = test_data;
 	nvmc_wait_until_ready();
-	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
+
+	NRF_NVMC->CONFIG  = NVMC_CONFIG_WEN_Ren;
 
 	while(1) {
 		__WFE();
