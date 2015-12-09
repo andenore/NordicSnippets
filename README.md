@@ -9,6 +9,8 @@ A developer can then use the examples as a basis to create an abstraction layer 
 
 Some examples also contain a 'test.py' file. 'test.py' tests that the example program behaves as expected.
 
+NordicSnippets is a great way to get started with nRF5x series devices. With such simple examples it is very easy to confidently get your toolchain setup and see how much more effecient the free tools Nordic provides can make you as a developer!
+
 Note that some peripherals and features of peripherals may not exist for your device.
 
 ## Tools
