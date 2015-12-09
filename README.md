@@ -7,8 +7,6 @@ The idea is that the examples are as simple as possible to showcase how easy it 
 
 A developer can then use the examples as a basis to create an abstraction layer that fits to his or hers use-case.
 
-Some examples also contain a 'test.py' file. 'test.py' tests that the example program behaves as expected.
-
 NordicSnippets is a great way to get started with nRF5x series devices. With such simple examples it is very easy to confidently get your toolchain setup and see how much more effecient the free tools Nordic provides can make you as a developer!
 
 Note that some peripherals and features of peripherals may not exist for your device.
@@ -38,9 +36,7 @@ Now you can use nrfjprog! After building any of the examples just run 'make flas
 ## Using pynrfjprog
 pynrfjprog is a python tool Nordic provides that makes setting up an automatic test suite for Nordic series devices very easy! It can be used with Python 2.7 and above and Python 3. To install pynrfjprog make sure you have 'pip' installed on your computer and run 'pip install pynrfjprog' from your command line.
 
-Now you can automatically test all examples that contain the file 'test.py' in the same director as the example's 'main.c' file. After compiling the example, open a command line in the same directory as the example's 'test.py' and run 'python test.py' from your command line.
-
-Note: The framework of 'test.py' can be easily used as a template to test other examples and custom applications.
+An example showing how to set up an automatic test suite with pynrfjprog and test your applications is coming soon!
 
 ## How to contribute
 If you are missing some examples you think would be nice, or think something could be improved, feel free to send a pull request.
