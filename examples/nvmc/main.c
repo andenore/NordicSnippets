@@ -15,8 +15,9 @@ int main(void)
 	static const uint32_t test_data               = 0x0ul;
 	static const uint32_t uicr_customer_address_0 = 0x10001080ul;
 	static const uint32_t code_flash_page_address = 0x20000ul;
-	
 	static uint32_t code_flash_address            = 0x1FFF8ul;
+	
+	static uint32_t i;
 
 	// Erase the UICR.
 	nvmc_wait_until_ready();
@@ -29,7 +30,6 @@ int main(void)
 	nvmc_wait_until_ready();
 	NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen;
 
-	static uint32_t i;
 	for (i = 0; i < 4; i++)
 	{
 		*((uint32_t *) code_flash_address) = test_data;

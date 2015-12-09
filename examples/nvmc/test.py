@@ -3,9 +3,18 @@ import unittest
 import sys
 import os
 
-""" Get full path to hex file under test. """
-DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
-HEXFILE = os.path.join(DIR, 'armgcc/nvmc.hex')
+"""
+Get the full path to the hex file under test based on the operating system used.
+"""
+from sys import platform as _platform
+
+if _platform == "linux" or _platform == "linux2" or _platform == "darwin": # Linux or Mac assumes use of armgcc.
+    relativePathBasedOnOs = 'armgcc/nvmc.hex'
+elif _platform == "win32": # And windows assumes use of Keil.
+    relativePathBasedOnOs = 'arm\\Objects\\example.hex'
+
+HEXFILE = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), relativePathBasedOnOs)
+assert (os.path.isfile(HEXFILE)), "Error: must compile the example project before running test.py. Make sure name of hex file and path are correct in test.py"
 
 class NVMCTests(unittest.TestCase):
 
