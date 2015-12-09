@@ -7,10 +7,12 @@ The idea is that the examples are as simple as possible to showcase how easy it 
 
 A developer can then use the examples as a basis to create an abstraction layer that fits to his or hers use-case.
 
+Some examples also contain a 'test.py' file. 'test.py' tests that the example program behaves as expected.
+
 Note that some peripherals and features of peripherals may not exist for your device.
 
 ## Tools
-The header files and tools that are needed can be downloaded from the Nordic web-pages listed below.
+The header files and tools that are needed can be downloaded from the Nordic web-pages listed below. The tools Nordic provides include nrfjprog, pynrfjprog and mergehex. Installing and using these tools with NordicSnippets is described in below sections.
 
 Header files are located in the MDK downloads, available for GCC, IAR and Keil.
 
@@ -30,6 +32,13 @@ Linux:
 Run 'nrfjprog' from your command line. The help menu should print and this indicates its path has been properly set.
 
 Now you can use nrfjprog! After building any of the examples just run 'make flash' from your command line to completly erase the chip, program & verify the hex file, and reset and run the application!
+
+## Using pynrfjprog
+pynrfjprog is a python tool Nordic provides that makes setting up an automatic test suite for Nordic series devices very easy! It can be used with Python 2.7 and above and Python 3. To install pynrfjprog make sure you have 'pip' installed on your computer and run 'pip install pynrfjprog' from your command line.
+
+Now you can automatically test all examples that conatin the file 'test.py' in the same director as the example's 'main.c' file. After compiling the example, open a command line in the same directory as the example's 'test.py' and run 'python test.py' from your command line.
+
+Note: The framework of 'test.py' can be easily used as a template to test other examples and custom applications.
 
 ## How to contribute
 If you are missing some examples you think would be nice, or think something could be improved, feel free to send a pull request.
