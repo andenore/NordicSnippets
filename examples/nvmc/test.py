@@ -3,9 +3,9 @@ import unittest
 import sys
 import os
 
-
+""" Get full path to hex file under test. """
 DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
-FILENAME = os.path.join(DIR, 'armgcc/nvmc.hex')
+HEXFILE = os.path.join(DIR, 'armgcc/nvmc.hex')
 
 class NVMCTests(unittest.TestCase):
 
@@ -52,15 +52,14 @@ class NVMCTests(unittest.TestCase):
         
         self.api.write_u32(uicrCustomerAddress1, testData, 1)
         
-        self._program_hex_file_and_run(FILENAME)
+        self._program_hex_file_and_run(HEXFILE)
         
         readData = self.api.read_u32(uicrCustomerAddress1)
-        
         self.assertEqual(expectedData, readData)
 
     def test_write_code_flash(self):   
         expectedData = [0x00] * 8   
-        self._program_hex_file_and_run(FILENAME)
+        self._program_hex_file_and_run(HEXFILE)
         
         readData = self.api.read(self.codeFlashAddress, 8) # Read 8 bytes (two registers) starting at codeFlashAddress.
         self.assertEqual(expectedData, readData)
@@ -68,7 +67,7 @@ class NVMCTests(unittest.TestCase):
     def test_code_flash_page_erased(self):
         expectedData = [0xFF] * 8
 
-        self._program_hex_file_and_run(FILENAME)
+        self._program_hex_file_and_run(HEXFILE)
         
         readData = self.api.read(self.codeFlashPageAddress, 8) # Read 8 bytes (two registers) starting at codePageAddress.
         self.assertEqual(expectedData, readData)
@@ -76,7 +75,7 @@ class NVMCTests(unittest.TestCase):
     def test_uicr_written(self):
         expectedData = 0x0
 
-        self._program_hex_file_and_run(FILENAME)
+        self._program_hex_file_and_run(HEXFILE)
 
         readData = self.api.read_u32(self.uicrCustomerAddress0)
         self.assertEqual(expectedData, readData)
