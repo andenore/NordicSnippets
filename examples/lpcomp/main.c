@@ -28,9 +28,6 @@ void lpcomp_init(void)
 
 int main(void)
 {
-    *(volatile uint32_t *)0x40013540 = (*(volatile uint32_t *)0x10000324 & 0x00001F00) >> 8; //PAN fix
-
-    
     //Configure GPIO pin as output with standard drive strength.
     NRF_GPIO->PIN_CNF[22] = (GPIO_PIN_CNF_DIR_Output << GPIO_PIN_CNF_DIR_Pos) |
                                 (GPIO_PIN_CNF_DRIVE_S0S1 << GPIO_PIN_CNF_DRIVE_Pos) |
