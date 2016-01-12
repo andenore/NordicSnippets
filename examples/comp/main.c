@@ -1,8 +1,5 @@
 #include <nrf.h>
 
-#define PPI_CHANNEL (0)
-#define PIN_GPIO    (23)
-
 void single_ended_comp_init(void)
 {
     //Ain2 (p0.4) is input
@@ -23,23 +20,9 @@ void single_ended_comp_init(void)
     //Enable
     NRF_COMP->ENABLE = (COMP_ENABLE_ENABLE_Enabled << COMP_ENABLE_ENABLE_Pos);
 
-    // Configure COMP->EVENTS_CROSS to toggle PIN_GPIO
-    NRF_GPIOTE->CONFIG[0] = (GPIOTE_CONFIG_MODE_Task       << GPIOTE_CONFIG_MODE_Pos) |
-                          (GPIOTE_CONFIG_OUTINIT_High     << GPIOTE_CONFIG_OUTINIT_Pos) |
-                          (GPIOTE_CONFIG_POLARITY_Toggle << GPIOTE_CONFIG_POLARITY_Pos) |
-                          (PIN_GPIO                      << GPIOTE_CONFIG_PSEL_Pos);
-
-    // Configure PPI channel with connection between COMP->EVENTS_CROSS and GPIOTE->TASKS_OUT[0]
-    NRF_PPI->CH[PPI_CHANNEL].EEP = (uint32_t)&NRF_COMP->EVENTS_CROSS;
-    NRF_PPI->CH[PPI_CHANNEL].TEP = (uint32_t)&NRF_GPIOTE->TASKS_OUT[0];
-  
-    // Enable PPI channel
-    NRF_PPI->CHENSET = (1UL << PPI_CHANNEL);
-    
     //Start the comparator
     NRF_COMP->TASKS_START=1;
-    while(!NRF_COMP->EVENTS_READY);
-   
+    while(!NRF_COMP->EVENTS_READY);   
 }
 
 int main(void)
