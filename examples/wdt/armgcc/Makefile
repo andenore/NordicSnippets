@@ -1,2 +1,2 @@
-PROG_NAME=gpio_toggle
+PROG_NAME=wdt
 include ../../../common/gcc/Makefile
