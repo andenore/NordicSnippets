@@ -1,1 +1,1 @@
-[PWM peripheral description](http://infocenter.nordicsemi.com/topic/nrf52.v1.7/Chunk1670748135.html)
+[PWM peripheral description](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.nrf52832.ps.v1.1/pwm.html)
