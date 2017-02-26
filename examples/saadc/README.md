@@ -1,1 +1,1 @@
-[SAADC peripheral description](http://infocenter.nordicsemi.com/topic/nrf52.v1.7/Chunk1924382754.html)
+[SAADC peripheral description](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.nrf52832.ps.v1.1/saadc.html)
