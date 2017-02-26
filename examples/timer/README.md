@@ -1,1 +1,1 @@
-[TIMER peripheral description](http://infocenter.nordicsemi.com/topic/nrf52.v1.7/Chunk196140934.html)
+[TIMER peripheral description](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.nrf52832.ps.v1.1/timer.html)
