@@ -2,7 +2,7 @@ DEVICE = NRF52
 DEVICE_VARIANT =xxaa
 
 # We have to use SDK, not MDK because core_cm4.h is not provided in MDK
-xDK_TOP ?=../../../../nRF52_SDK_0.9.2_dbc28c9
+xDK_TOP ?=../../../../nRF5_SDK_12.2.0_f012efa
 
 SOURCES = ../main.c
 
@@ -48,9 +48,10 @@ CFLAGS += -L $(xDK_TOP)/components/toolchain/gcc
 CFLAGS += -I$(xDK_TOP)/components/device
 CFLAGS += -I$(xDK_TOP)/components/toolchain
 CFLAGS += -I$(xDK_TOP)/components/toolchain/gcc
+CFLAGS += -I$(xDK_TOP)/components/toolchain/cmsis/include
 
 SOURCES += $(xDK_TOP)/components/toolchain/system_$(DEVICE_LC).c
-SOURCES += $(xDK_TOP)/components/toolchain/gcc/gcc_startup_$(DEVICE_LC).s
+SOURCES += $(xDK_TOP)/components/toolchain/gcc/gcc_startup_$(DEVICE_LC).S
 
 all:
 	@echo "Program : $(PROG_NAME)"
