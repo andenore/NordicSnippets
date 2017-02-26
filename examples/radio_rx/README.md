@@ -1,1 +1,1 @@
-[Radio peripheral description](http://infocenter.nordicsemi.com/topic/nrf52.v1.7/Chunk271234109.html)
+[Radio peripheral description](http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.nrf52832.ps.v1.1/radio.html)
