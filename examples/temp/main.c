@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  volatile uint32_t temperature;
+  volatile int32_t temperature;
 
   // Start HFCLK crystal oscillator, since that will give highest accuracy
   NRF_CLOCK->TASKS_HFCLKSTART = 1;
